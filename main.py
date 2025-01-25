@@ -129,14 +129,6 @@ class App(tk.Tk):
         thread.start()
 
 
-def main():
-    target = [4, 10, 5, 2, 1, 7, 8, 6, 3, 9]
-    qs = QuickSort()
-    qs.set_target_array(target.copy())
-    sorted = qs.sort()
-    print(sorted)
-
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
