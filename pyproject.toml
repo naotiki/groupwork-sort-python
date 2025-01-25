@@ -1,0 +1,9 @@
+[project]
+name = "groupwork-sort-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pytk>=0.0.2.1",
+]
