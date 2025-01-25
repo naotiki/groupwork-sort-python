@@ -54,7 +54,7 @@ class SortMethod(metaclass=ABCMeta):
 
     def set_target_array(self, arr: List[int]):
         self.reset()
-        self.target = arr
+        self.target = arr.copy()
 
     @abstractmethod
     def sort(self) -> List[int]:
