@@ -3,11 +3,11 @@ from lib import SortMethod
 
 
 class QuickSort(SortMethod):
-    def quick_sort_impl(self, l: int, r: int):
-        if l >= r:
+    def quick_sort_impl(self, left: int, right: int):
+        if left >= right:
             return
-        self.set("L", l)
-        self.set("R", r)
+        self.set("L", left)
+        self.set("R", right)
         ptr = ("L", +1)
         while self.get("L") != self.get("R"):
             if self.target[self.get("L")] > self.target[self.get("R")]:
@@ -17,8 +17,8 @@ class QuickSort(SortMethod):
             else:
                 self.add(ptr[0], ptr[1])
         middle = self.get("L")
-        self.quick_sort_impl(l, middle - 1)
-        self.quick_sort_impl(middle + 1, r)
+        self.quick_sort_impl(left, middle - 1)
+        self.quick_sort_impl(middle + 1, right)
 
     def sort(self) -> List[int]:
         self.quick_sort_impl(0, len(self.target) - 1)

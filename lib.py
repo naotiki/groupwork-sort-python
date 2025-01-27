@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Literal, Tuple
+from typing import Dict, List, Tuple
 
 
 class Op(Enum):

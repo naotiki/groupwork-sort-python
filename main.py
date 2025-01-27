@@ -1,9 +1,7 @@
-import os
 import threading
-from time import sleep, time
+from time import sleep
 import tkinter as tk
 from tkinter import ttk
-from types import coroutine
 from typing import Dict, List
 from sort_bubble import BubbleSort
 from lib import Op, SortMethod
