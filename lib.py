@@ -4,8 +4,9 @@ from enum import Enum
 from typing import Dict, List, Tuple
 
 
+# GUIでソートをリプレイするための操作一覧
 class Op(Enum):
-    SetPointer = (1,)
+    SetPointer = 1
     Swap = 2
 
 
