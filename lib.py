@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Tuple
+from tkinter import Tk
+from typing import Dict, List, Tuple, Callable
 
 
 # GUIでソートをリプレイするための操作一覧
@@ -60,3 +61,52 @@ class SortMethod(metaclass=ABCMeta):
     @abstractmethod
     def sort(self) -> List[int]:
         pass
+
+
+@dataclass
+class Task:
+    delay_ms: int
+    task: Callable[[], None]
+
+
+class TkInterTasks:
+    def __init__(self, tk: Tk):
+        self.tasks: Dict[str, List[Task]] = {}
+        self.progress: Dict[str, int] = {}
+        self.tk = tk
+
+    def add_task(self, task: Task, key: str = ""):
+        if key not in self.tasks:
+            self.tasks[key] = []
+        self.tasks[key].append(task)
+
+    def consume(self, key: str = ""):
+        if key not in self.tasks:
+            return
+        self.progress[key] = 0
+        task = self.tasks[key][0]
+        self.tk.after(
+            task.delay_ms,
+            lambda b=task.task, k=key: self.do_recursive(b, k)(),
+        )
+
+    def next_task(self, key: str):
+        self.progress[key] += 1
+        if self.progress[key] >= len(self.tasks[key]):
+            return None
+        return self.tasks[key][self.progress[key]]
+
+    def do_recursive(self, body: Callable[[], None], key: str):
+        def inner():
+            body()
+            next = self.next_task(key)
+            if next is None:
+                self.progress[key] = 0
+                self.tasks[key].clear()
+                return None
+            return self.tk.after(
+                next.delay_ms,
+                lambda b=next.task, k=key: self.do_recursive(b, k)(),
+            )
+
+        return inner

@@ -9,8 +9,10 @@ class SelectionSort(SortMethod):
             self.set("L", i)
             # 最小値のインデックスを探す
             min_index = i
+            self.set("R", min_index)
             self.set("MIN", min_index)
             for j in range(i + 1, n):
+                self.set("R", j)
                 if self.target[j] < self.target[min_index]:
                     min_index = j
                     self.set("MIN", min_index)

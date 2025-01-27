@@ -1,10 +1,8 @@
-import threading
-from time import sleep
 import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List
 from sort_bubble import BubbleSort
-from lib import Op, SortMethod
+from lib import Op, SortMethod, Task, TkInterTasks
 from sort_insertion import InsertionSort
 from sort_quick import QuickSort
 from sort_selection import SelectionSort
@@ -20,6 +18,9 @@ class App(tk.Tk):
 
     def __init__(self):
         super().__init__()
+
+        self.tasks = TkInterTasks(self)
+
         sort_method_keys = list(self.sort_methods.keys())
 
         self.title("Super Sort App")
@@ -33,10 +34,17 @@ class App(tk.Tk):
         combobox.set(sort_method_keys[0])
         combobox.grid(row=0, column=1, sticky="w")
 
-        self.button = ttk.Button(
+        """ self.button = ttk.Button(
             text="Sort!",
             command=lambda: self.thread_sort(
                 combobox.get(), [int(s) for s in entry_var.get().split(",")]
+            ),
+        ) """
+        self.button = ttk.Button(
+            text="Sort!",
+            command=lambda: self.do_sort(
+                combobox.get(),
+                [int(s) for s in entry_var.get().split(",")],
             ),
         )
         self.button.grid(row=0, column=2, sticky="w")
@@ -115,16 +123,8 @@ class App(tk.Tk):
                 self.button["state"] = "enabled"
 
         for i, op in enumerate(sort_way.record):
-            update_canvas(op, i)
-            sleep(0.1)
-
-    def thread_sort(
-        self,
-        sort_method: str,
-        target_array: List[int],
-    ):
-        thread = threading.Thread(target=self.do_sort, args=(sort_method, target_array))
-        thread.start()
+            self.tasks.add_task(Task(500, lambda i=i,op=op: update_canvas(op, i)))
+        self.tasks.consume()
 
 
 if __name__ == "__main__":
