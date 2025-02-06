@@ -53,6 +53,21 @@ class App(tk.Tk):
             self, width=800, height=400, relief="ridge", borderwidth="2"
         )
         self.canvas.grid(row=1, column=0, columnspan=3)
+        self.speed = tk.IntVar(self, 100)
+        tk.Scale(
+            self,
+            from_=0,
+            to=2000,
+            orient="horizontal",
+            variable=self.speed,
+            
+            command=lambda s:self.speed.set(int(float(s))),
+            tickinterval=200,
+            resolution=10,
+            length=500,
+        ).grid(row=2, column=0, columnspan=3)
+        ttk.Label(self, text="Speed:").grid(row=3, column=0)
+        tk.Entry(self, textvariable=self.speed).grid(row=3, column=1)
 
     def do_sort(
         self,
@@ -123,7 +138,12 @@ class App(tk.Tk):
                 self.button["state"] = "enabled"
 
         for i, op in enumerate(sort_way.record):
-            self.tasks.add_task(Task(500, lambda i=i,op=op: update_canvas(op, i)))
+            self.tasks.add_task(
+                Task(
+                    lambda: int(self.speed.get()),
+                    lambda i=i, op=op: update_canvas(op, i),
+                )
+            )
         self.tasks.consume()
 
 

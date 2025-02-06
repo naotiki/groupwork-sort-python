@@ -65,7 +65,7 @@ class SortMethod(metaclass=ABCMeta):
 
 @dataclass
 class Task:
-    delay_ms: int
+    delay_ms: Callable[[], int]
     task: Callable[[], None]
 
 
@@ -86,7 +86,7 @@ class TkInterTasks:
         self.progress[key] = 0
         task = self.tasks[key][0]
         self.tk.after(
-            task.delay_ms,
+            task.delay_ms(),
             lambda b=task.task, k=key: self.do_recursive(b, k)(),
         )
 
@@ -105,7 +105,7 @@ class TkInterTasks:
                 self.tasks[key].clear()
                 return None
             return self.tk.after(
-                next.delay_ms,
+                next.delay_ms(),
                 lambda b=next.task, k=key: self.do_recursive(b, k)(),
             )
 
