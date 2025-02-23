@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Dict, List
 from sort_bubble import BubbleSort
-from lib import Op, SortMethod, Task, TkInterTasks
+from lib import SwapOp, SortMethod, Task, TkInterTasks
+from sort_heap import HeapSort
 from sort_insertion import InsertionSort
 from sort_quick import QuickSort
 from sort_selection import SelectionSort
@@ -14,6 +15,7 @@ class App(tk.Tk):
         "Bubble Sort": BubbleSort(),
         "Selection Sort": SelectionSort(),
         "Insertion Sort": InsertionSort(),
+        "Heap Sort": HeapSort(),
     }
 
     def __init__(self):
@@ -60,8 +62,7 @@ class App(tk.Tk):
             to=2000,
             orient="horizontal",
             variable=self.speed,
-            
-            command=lambda s:self.speed.set(int(float(s))),
+            command=lambda s: self.speed.set(int(float(s))),
             tickinterval=200,
             resolution=10,
             length=500,
@@ -91,10 +92,10 @@ class App(tk.Tk):
 
             opcode = op[0]
             swapped = []
-            if opcode == Op.SetPointer:
+            if opcode == SwapOp.SetPointer:
                 [name, pos] = op[1]
                 pointers[name] = pos
-            elif opcode == Op.Swap:
+            elif opcode == SwapOp.Swap:
                 [a, b] = op[1]
                 a_i = pointers[a]
                 b_i = pointers[b]
@@ -129,8 +130,8 @@ class App(tk.Tk):
                     names = [a[0] for a in list(pointers.items()) if a[1] == i]
                     for i, n in enumerate(names):
                         self.canvas.create_text(
-                            (x1) + ((1 + i) * cell_size / (len(names) + 1)),
-                            (y1 + y2) * 1.5,
+                            (x1 + x2) // 2,  # 中央に配置
+                            y2 + (i + 1) * 20,  # 20ピクセルずつ下にずらす
                             text=n,
                             tags=sort_method,
                         )

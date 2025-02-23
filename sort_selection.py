@@ -1,8 +1,8 @@
 from typing import List
-from lib import SortMethod
+from lib import SwapBasedSortMethod
 
 
-class SelectionSort(SortMethod):
+class SelectionSort(SwapBasedSortMethod):
     def sort(self) -> List[int]:
         n = len(self.target)
         for i in range(n - 1):

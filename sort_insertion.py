@@ -1,8 +1,8 @@
 from typing import List
-from lib import SortMethod
+from lib import SwapBasedSortMethod
 
 
-class InsertionSort(SortMethod):
+class InsertionSort(SwapBasedSortMethod):
     def sort(self) -> List[int]:
         self.set("SORTED", 0)
         while self.get("SORTED") != len(self.target) - 1:
