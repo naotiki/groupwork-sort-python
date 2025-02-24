@@ -1,7 +1,6 @@
 from typing import List
 from lib import SwapBasedSortMethod
 
-
 class QuickSort(SwapBasedSortMethod):
     def quick_sort_impl(self, left: int, right: int):
         if left >= right:

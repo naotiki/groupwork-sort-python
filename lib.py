@@ -73,49 +73,6 @@ class SwapBasedSortMethod(SortMethod[SwapOp, List[str | int]]):
         j = self.pointers[b]
         self.target[i], self.target[j] = self.target[j], self.target[i]
 
-class MergeOp(Enum):
-    SetPointer = 1
-    Add = 2,
-    Reset = 3
-@dataclass
-class MergeBasedSortMethod(SortMethod[MergeOp, List[str | int]]):
-    # GUIでソートをリプレイするための操作一覧
-
-    pointers: Dict[str, int] = field(default_factory=dict)
-
-    def reset(self):
-        super().reset()
-        self.pointers = {}
-
-    # Set pointer to pos
-    def set(self, name: str, pos: int):
-        self.record.append((MergeOp.SetPointer, [name, pos]))
-        self.pointers[name] = pos
-
-    def get(self, name: str) -> int:
-        if name not in self.pointers.keys():
-            raise ValueError(
-                f"defined pointers are {self.pointers.keys()} but passed {name}"
-            )
-        return self.pointers[name]
-
-    def dec(self, name: str):
-        self.add(name, -1)
-
-    def inc(self, name: str):
-        self.add(name, +1)
-
-    def add(self, name: str, value: int):
-        self.set(name, self.get(name) + value)
-    def merge(self, a: str, b: str):
-        if a not in self.pointers.keys() or b not in self.pointers.keys():
-            raise ValueError(
-                f"defined pointers are {self.pointers.keys()} but passed {a},{b}."
-            )
-        self.record.append((MergeOp.Add, [a, b]))
-        i = self.pointers[a]
-        j = self.pointers[b]
-        self.target[i], self.target[j] = self.target[j], self.target[i]
 
 
 @dataclass

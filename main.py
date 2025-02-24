@@ -5,6 +5,7 @@ from sort_bubble import BubbleSort
 from lib import SwapOp, SortMethod, Task, TkInterTasks
 from sort_heap import HeapSort
 from sort_insertion import InsertionSort
+from sort_merge import MergeOp, MergeSort
 from sort_quick import QuickSort
 from sort_selection import SelectionSort
 
@@ -16,6 +17,7 @@ class App(tk.Tk):
         "Selection Sort": SelectionSort(),
         "Insertion Sort": InsertionSort(),
         "Heap Sort": HeapSort(),
+        "Merge Sort": MergeSort(),
     }
 
     def __init__(self):
@@ -80,8 +82,8 @@ class App(tk.Tk):
         self.button["state"] = "disable"
         sort_way = self.sort_methods[sort_method]
         sort_way.set_target_array(target_array.copy())
-        sort_way.sort()
-
+        result = sort_way.sort()
+        print(result)
         array = target_array.copy()
 
         pointers: Dict[str, int] = {}
@@ -91,7 +93,7 @@ class App(tk.Tk):
             self.canvas.delete("all")
 
             opcode = op[0]
-            swapped = []
+            updated = []
             if opcode == SwapOp.SetPointer:
                 [name, pos] = op[1]
                 pointers[name] = pos
@@ -102,9 +104,46 @@ class App(tk.Tk):
                 tmp = array[a_i]
                 array[a_i] = array[b_i]
                 array[b_i] = tmp
-                swapped.append(a_i)
-                swapped.append(b_i)
-
+                updated.append(a_i)
+                updated.append(b_i)
+            # main.pyのupdate_canvas関数内に追加
+            if opcode == MergeOp.SetPointer:
+                [name, pos] = op[1]
+                pointers[name] = pos
+            elif opcode == MergeOp.Update:
+                [pos, value] = op[1]
+                array[pos] = value
+                updated.append(pos)
+            elif opcode == MergeOp.Split:
+                [split] = op[1]
+                # 分割線と範囲を表示
+                self.canvas.create_rectangle(
+                    0, cell_size,  # 配列の下に表示
+                    split * cell_size, cell_size + 10,
+                    fill="lightblue",
+                    outline="blue"
+                )
+                self.canvas.create_rectangle(
+                    split * cell_size, cell_size,
+                    len(array) * cell_size, cell_size + 10,
+                    fill="lightgreen",
+                    outline="green"
+                )
+                self.canvas.create_line(
+                    split * cell_size, 0,
+                    split * cell_size, cell_size + 10,
+                    fill="blue",
+                    width=10
+                )
+            elif opcode == MergeOp.Merge:
+                [start, end] = op[1]
+                # マージ範囲の表示
+                self.canvas.create_rectangle(
+                    start * cell_size, cell_size,
+                    end * cell_size, cell_size + 10,
+                    fill="yellow",
+                    outline="orange"
+                )
             for i, num in enumerate(array):
                 x1 = i * cell_size
                 x2 = x1 + cell_size
@@ -118,7 +157,7 @@ class App(tk.Tk):
                     y2,
                     outline="black",  # 枠線を黒
                     fill=(
-                        "red" if (i in swapped) else "orange" if (has_marker) else ""
+                        "red" if (i in updated) else "orange" if (has_marker) else ""
                     ),
                     tags=sort_method,
                 )

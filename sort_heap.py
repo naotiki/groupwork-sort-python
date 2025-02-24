@@ -1,7 +1,6 @@
 from typing import List
 from lib import SwapBasedSortMethod
 
-
 class HeapSort(SwapBasedSortMethod):
     def heap(self, arr: List[int], parent: int, length: int):
         largest = parent

@@ -1,7 +1,6 @@
 from typing import List
 from lib import SwapBasedSortMethod
 
-
 class BubbleSort(SwapBasedSortMethod):
     def sort(self) -> List[int]:
         n = len(self.target)
@@ -12,9 +11,5 @@ class BubbleSort(SwapBasedSortMethod):
                 self.set("R", j + 1)
                 if self.target[j] > self.target[j + 1]:
                     # 交換
-                    # self.target[j], self.target[j + 1] = (
-                    # self.target[j + 1],
-                    # self.target[j],
-                    # )
                     self.swap("L", "R")
         return self.target

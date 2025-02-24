@@ -1,7 +1,6 @@
 from typing import List
 from lib import SwapBasedSortMethod
 
-
 class InsertionSort(SwapBasedSortMethod):
     def sort(self) -> List[int]:
         self.set("SORTED", 0)
